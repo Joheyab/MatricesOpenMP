@@ -30,3 +30,15 @@
 *.exe
 *.out
 *.app
+
+*.vs
+
+*.vcxproj.FileListAbsolute.txt
+*.tlog
+*.vc143.pdb
+MatricesOPENMP/x64/Debug/vc143.pdb
+*.cache
+MatricesOPENMP/x64/Debug/MatricesOPENMP.Form1.resources
+*.res
+x64/Debug/MatricesOPENMP.pdb
+MatricesOPENMP/x64/Debug/MatricesOPENMP.log
