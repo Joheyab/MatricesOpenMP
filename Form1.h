@@ -45,6 +45,10 @@ namespace CppCLRWinFormsProject {
   private: System::Windows::Forms::Label^ label4;
   private: System::Windows::Forms::Label^ label5;
   private: System::Windows::Forms::Button^ button2;
+
+
+
+
   private: System::Windows::Forms::Button^ button1;
 
 
@@ -78,6 +82,7 @@ namespace CppCLRWinFormsProject {
   protected:
   private: System::Windows::Forms::TextBox^ textBox1;
   private: System::Windows::Forms::ComboBox^ comboBox1;
+  private: System::ComponentModel::IContainer^ components;
 
 
   
@@ -93,7 +98,7 @@ namespace CppCLRWinFormsProject {
     /// <summary>
     /// Required designer variable.
     /// </summary>
-    System::ComponentModel::Container^ components;
+
 
 #pragma region Windows Form Designer generated code
     /// <summary>
@@ -132,7 +137,7 @@ namespace CppCLRWinFormsProject {
         // 
         this->textBox1->Location = System::Drawing::Point(34, 126);
         this->textBox1->Name = L"textBox1";
-        this->textBox1->Size = System::Drawing::Size(185, 20);
+        this->textBox1->Size = System::Drawing::Size(257, 20);
         this->textBox1->TabIndex = 1;
         // 
         // comboBox1
@@ -180,30 +185,31 @@ namespace CppCLRWinFormsProject {
         // 
         // Amatrix
         // 
-        this->Amatrix->Location = System::Drawing::Point(324, 29);
+        this->Amatrix->Location = System::Drawing::Point(315, 25);
+        this->Amatrix->MaxLength = 1632767;
         this->Amatrix->Multiline = true;
         this->Amatrix->Name = L"Amatrix";
         this->Amatrix->ReadOnly = true;
-        this->Amatrix->Size = System::Drawing::Size(131, 109);
+        this->Amatrix->Size = System::Drawing::Size(151, 138);
         this->Amatrix->TabIndex = 6;
         this->Amatrix->TextChanged += gcnew System::EventHandler(this, &Form1::Amatrix_TextChanged);
         // 
         // Rmatrix
         // 
-        this->Rmatrix->Location = System::Drawing::Point(418, 173);
+        this->Rmatrix->Location = System::Drawing::Point(354, 192);
         this->Rmatrix->Multiline = true;
         this->Rmatrix->Name = L"Rmatrix";
         this->Rmatrix->ReadOnly = true;
-        this->Rmatrix->Size = System::Drawing::Size(135, 109);
+        this->Rmatrix->Size = System::Drawing::Size(287, 158);
         this->Rmatrix->TabIndex = 7;
         // 
         // Bmatrix
         // 
-        this->Bmatrix->Location = System::Drawing::Point(511, 29);
+        this->Bmatrix->Location = System::Drawing::Point(503, 25);
         this->Bmatrix->Multiline = true;
         this->Bmatrix->Name = L"Bmatrix";
         this->Bmatrix->ReadOnly = true;
-        this->Bmatrix->Size = System::Drawing::Size(137, 109);
+        this->Bmatrix->Size = System::Drawing::Size(162, 138);
         this->Bmatrix->TabIndex = 8;
         // 
         // label3
@@ -227,15 +233,16 @@ namespace CppCLRWinFormsProject {
         // label5
         // 
         this->label5->AutoSize = true;
-        this->label5->Location = System::Drawing::Point(455, 154);
+        this->label5->Location = System::Drawing::Point(458, 176);
         this->label5->Name = L"label5";
         this->label5->Size = System::Drawing::Size(57, 13);
         this->label5->TabIndex = 11;
         this->label5->Text = L"Matrix Res";
+        this->label5->Click += gcnew System::EventHandler(this, &Form1::label5_Click);
         // 
         // button2
         // 
-        this->button2->Location = System::Drawing::Point(315, 199);
+        this->button2->Location = System::Drawing::Point(273, 241);
         this->button2->Name = L"button2";
         this->button2->Size = System::Drawing::Size(75, 23);
         this->button2->TabIndex = 12;
@@ -247,7 +254,7 @@ namespace CppCLRWinFormsProject {
         // 
         this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
         this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-        this->ClientSize = System::Drawing::Size(708, 294);
+        this->ClientSize = System::Drawing::Size(677, 360);
         this->Controls->Add(this->button2);
         this->Controls->Add(this->label5);
         this->Controls->Add(this->label4);
@@ -290,11 +297,21 @@ private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e)
 }
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
     backgroundWorker1->RunWorkerAsync();
+    if (rows < 50) {
+        Rmatrix->ResetText();
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < rows; j++) {
+                Rmatrix->AppendText(String::Concat(Convert::ToString(matrixR[i][j]), " "));
+            }
+            Rmatrix->AppendText("\r\n");
+        }
+    }
 }
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
     matrixA = new float* [rows];
     matrixB = new float* [rows];
     matrixR = new float* [rows];
+
     for (int i = 0; i < rows; i++)
         matrixA[i] = new float[rows];
     for (int i = 0; i < rows; i++)
@@ -306,22 +323,27 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
             matrixA[i][j] = matrixB[i][j] = i + j;
             matrixR[i][j] = 0;
         }
+
     Amatrix->ResetText();
     Bmatrix->ResetText();
     Rmatrix->ResetText();
+
     if (rows < 50) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < rows; j++) {
                 Amatrix->AppendText(String::Concat(Convert::ToString(matrixA[i][j]), " "));
                 Bmatrix->AppendText(String::Concat(Convert::ToString(matrixB[i][j]), " "));
                 Rmatrix->AppendText(String::Concat(Convert::ToString(matrixR[i][j]), " "));
+            }
+            Amatrix->AppendText("\r\n"); // Salto de línea después de cada fila
+            Bmatrix->AppendText("\r\n"); // Salto de línea después de cada fila
+            Rmatrix->AppendText("\r\n"); // Salto de línea después de cada fila
+        }
+    }
+    
 }
-			Amatrix->AppendText("\n");
-			Bmatrix->AppendText("\n");
-            Rmatrix->AppendText("\n");
-		}
-	}
-}
+
+
 
 private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
     nThreads = int::Parse(comboBox1->Text);
@@ -330,17 +352,17 @@ private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, Sys
 private: System::Void Form1_Load(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void backgroundWorker1_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e) {
-    int sum = 0;
+    double stime = omp_get_wtime();
+#pragma omp parallel num_threads(nThreads)
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < rows; j++)
+                for (int k = 0; k < rows; k++) {
+                    matrixR[i][j] += matrixA[i][k] * matrixB[k][j];
+                }
+    stime = omp_get_wtime() - stime;
+    message = String::Concat("Elapsed time: ", Convert::ToString(stime), " seconds");
+        SetText(message);
 
-    // Utilizar OpenMP para el bucle paralelo
-#pragma omp parallel num_threads(nThreads) reduction(+:sum)
-    {
-        sum += 1;
-    }
-
-    message = String::Concat("Hello World from nthreads ", 
-        Convert::ToString(sum));
-    SetText(message);
 }
   private: System::Void comboBox2_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
     	rows = int::Parse(comboBox2->Text);
@@ -351,6 +373,8 @@ private: System::Void backgroundWorker1_DoWork(System::Object^ sender, System::C
   }
   private: System::Void Rmatrix_TextChanged(System::Object^ sender, System::EventArgs^ e) {
   }
+private: System::Void label5_Click(System::Object^ sender, System::EventArgs^ e) {
+}
 };
 }
 
