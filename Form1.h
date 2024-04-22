@@ -32,6 +32,7 @@ namespace CppCLRWinFormsProject {
       float** matrixA;
       float** matrixB;
       float** matrixR;
+      char operation;
   private: System::ComponentModel::BackgroundWorker^ backgroundWorker1;
   private: System::Windows::Forms::Label^ label2;
   private: System::Windows::Forms::ComboBox^ comboBox2;
@@ -45,6 +46,8 @@ namespace CppCLRWinFormsProject {
   private: System::Windows::Forms::Label^ label4;
   private: System::Windows::Forms::Label^ label5;
   private: System::Windows::Forms::Button^ button2;
+  private: System::Windows::Forms::ComboBox^ comboBox3;
+  private: System::Windows::Forms::Label^ label6;
 
 
 
@@ -58,6 +61,7 @@ namespace CppCLRWinFormsProject {
       InitializeComponent();
       nThreads = 1;
       rows = 4;
+      operation = 'M';
       //
       //TODO: Add the constructor code here
       //
@@ -121,12 +125,14 @@ namespace CppCLRWinFormsProject {
         this->label4 = (gcnew System::Windows::Forms::Label());
         this->label5 = (gcnew System::Windows::Forms::Label());
         this->button2 = (gcnew System::Windows::Forms::Button());
+        this->comboBox3 = (gcnew System::Windows::Forms::ComboBox());
+        this->label6 = (gcnew System::Windows::Forms::Label());
         this->SuspendLayout();
         // 
         // label1
         // 
         this->label1->AutoSize = true;
-        this->label1->Location = System::Drawing::Point(31, 48);
+        this->label1->Location = System::Drawing::Point(31, 80);
         this->label1->Name = L"label1";
         this->label1->Size = System::Drawing::Size(61, 13);
         this->label1->TabIndex = 0;
@@ -135,7 +141,7 @@ namespace CppCLRWinFormsProject {
         // 
         // textBox1
         // 
-        this->textBox1->Location = System::Drawing::Point(34, 126);
+        this->textBox1->Location = System::Drawing::Point(34, 176);
         this->textBox1->Name = L"textBox1";
         this->textBox1->Size = System::Drawing::Size(257, 20);
         this->textBox1->TabIndex = 1;
@@ -144,7 +150,7 @@ namespace CppCLRWinFormsProject {
         // 
         this->comboBox1->FormattingEnabled = true;
         this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(4) { L"1", L"2", L"3", L"4" });
-        this->comboBox1->Location = System::Drawing::Point(98, 45);
+        this->comboBox1->Location = System::Drawing::Point(98, 77);
         this->comboBox1->Name = L"comboBox1";
         this->comboBox1->Size = System::Drawing::Size(35, 21);
         this->comboBox1->TabIndex = 2;
@@ -152,11 +158,11 @@ namespace CppCLRWinFormsProject {
         // 
         // button1
         // 
-        this->button1->Location = System::Drawing::Point(144, 154);
+        this->button1->Location = System::Drawing::Point(184, 214);
         this->button1->Name = L"button1";
-        this->button1->Size = System::Drawing::Size(75, 23);
+        this->button1->Size = System::Drawing::Size(107, 23);
         this->button1->TabIndex = 3;
-        this->button1->Text = L"Go";
+        this->button1->Text = L"Make operation";
         this->button1->UseVisualStyleBackColor = true;
         this->button1->Click += gcnew System::EventHandler(this, &Form1::button1_Click);
         // 
@@ -167,7 +173,7 @@ namespace CppCLRWinFormsProject {
         // label2
         // 
         this->label2->AutoSize = true;
-        this->label2->Location = System::Drawing::Point(31, 102);
+        this->label2->Location = System::Drawing::Point(31, 107);
         this->label2->Name = L"label2";
         this->label2->Size = System::Drawing::Size(27, 13);
         this->label2->TabIndex = 4;
@@ -177,7 +183,7 @@ namespace CppCLRWinFormsProject {
         // 
         this->comboBox2->FormattingEnabled = true;
         this->comboBox2->Items->AddRange(gcnew cli::array< System::Object^  >(4) { L"5", L"6", L"7", L"8" });
-        this->comboBox2->Location = System::Drawing::Point(64, 99);
+        this->comboBox2->Location = System::Drawing::Point(98, 104);
         this->comboBox2->Name = L"comboBox2";
         this->comboBox2->Size = System::Drawing::Size(80, 21);
         this->comboBox2->TabIndex = 5;
@@ -185,6 +191,10 @@ namespace CppCLRWinFormsProject {
         // 
         // Amatrix
         // 
+        this->Amatrix->BackColor = System::Drawing::SystemColors::ActiveCaption;
+        this->Amatrix->Enabled = false;
+        this->Amatrix->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+            static_cast<System::Byte>(0)));
         this->Amatrix->Location = System::Drawing::Point(315, 25);
         this->Amatrix->MaxLength = 1632767;
         this->Amatrix->Multiline = true;
@@ -196,6 +206,11 @@ namespace CppCLRWinFormsProject {
         // 
         // Rmatrix
         // 
+        this->Rmatrix->BackColor = System::Drawing::SystemColors::Info;
+        this->Rmatrix->Enabled = false;
+        this->Rmatrix->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+            static_cast<System::Byte>(0)));
+        this->Rmatrix->ForeColor = System::Drawing::SystemColors::WindowText;
         this->Rmatrix->Location = System::Drawing::Point(354, 192);
         this->Rmatrix->Multiline = true;
         this->Rmatrix->Name = L"Rmatrix";
@@ -205,6 +220,10 @@ namespace CppCLRWinFormsProject {
         // 
         // Bmatrix
         // 
+        this->Bmatrix->BackColor = System::Drawing::SystemColors::ActiveCaption;
+        this->Bmatrix->Enabled = false;
+        this->Bmatrix->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+            static_cast<System::Byte>(0)));
         this->Bmatrix->Location = System::Drawing::Point(503, 25);
         this->Bmatrix->Multiline = true;
         this->Bmatrix->Name = L"Bmatrix";
@@ -242,7 +261,7 @@ namespace CppCLRWinFormsProject {
         // 
         // button2
         // 
-        this->button2->Location = System::Drawing::Point(273, 241);
+        this->button2->Location = System::Drawing::Point(103, 214);
         this->button2->Name = L"button2";
         this->button2->Size = System::Drawing::Size(75, 23);
         this->button2->TabIndex = 12;
@@ -250,11 +269,34 @@ namespace CppCLRWinFormsProject {
         this->button2->UseVisualStyleBackColor = true;
         this->button2->Click += gcnew System::EventHandler(this, &Form1::button2_Click);
         // 
+        // comboBox3
+        // 
+        this->comboBox3->FormattingEnabled = true;
+        this->comboBox3->Items->AddRange(gcnew cli::array< System::Object^  >(2) { L"Multiplication", L"Addition" });
+        this->comboBox3->Location = System::Drawing::Point(136, 131);
+        this->comboBox3->Name = L"comboBox3";
+        this->comboBox3->Size = System::Drawing::Size(80, 21);
+        this->comboBox3->TabIndex = 13;
+        this->comboBox3->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::comboBox3_SelectedIndexChanged);
+        // 
+        // label6
+        // 
+        this->label6->AutoSize = true;
+        this->label6->Location = System::Drawing::Point(31, 134);
+        this->label6->Name = L"label6";
+        this->label6->Size = System::Drawing::Size(90, 13);
+        this->label6->TabIndex = 14;
+        this->label6->Text = L"Type of operation";
+        this->label6->Click += gcnew System::EventHandler(this, &Form1::label6_Click);
+        // 
         // Form1
         // 
         this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
         this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+        this->BackColor = System::Drawing::Color::IndianRed;
         this->ClientSize = System::Drawing::Size(677, 360);
+        this->Controls->Add(this->label6);
+        this->Controls->Add(this->comboBox3);
         this->Controls->Add(this->button2);
         this->Controls->Add(this->label5);
         this->Controls->Add(this->label4);
@@ -357,7 +399,12 @@ private: System::Void backgroundWorker1_DoWork(System::Object^ sender, System::C
         for (int i = 0; i < rows; i++)
             for (int j = 0; j < rows; j++)
                 for (int k = 0; k < rows; k++) {
-                    matrixR[i][j] += matrixA[i][k] * matrixB[k][j];
+                    if (operation == 'A') {
+                        matrixR[i][j] += matrixA[i][j] + matrixB[i][j];
+                    }
+                    else if (operation == 'M') {
+                        matrixR[i][j] += matrixA[i][k] * matrixB[k][j];
+                    }
                 }
     stime = omp_get_wtime() - stime;
     message = String::Concat("Elapsed time: ", Convert::ToString(stime), " seconds");
@@ -374,6 +421,20 @@ private: System::Void backgroundWorker1_DoWork(System::Object^ sender, System::C
   private: System::Void Rmatrix_TextChanged(System::Object^ sender, System::EventArgs^ e) {
   }
 private: System::Void label5_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label6_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+  private: System::Void comboBox3_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+      ComboBox^ comboBox = dynamic_cast<ComboBox^>(sender);
+      if (comboBox != nullptr) {
+          String^ selectedOperation = comboBox->SelectedItem->ToString();
+          if (selectedOperation == "Multiplication") {
+              operation = 'M';
+          }
+          else if (selectedOperation == "Addition") {
+              operation = 'A';
+          }
+      }
 }
 };
 }
