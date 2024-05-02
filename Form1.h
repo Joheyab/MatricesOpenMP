@@ -272,7 +272,7 @@ namespace CppCLRWinFormsProject {
         // comboBox3
         // 
         this->comboBox3->FormattingEnabled = true;
-        this->comboBox3->Items->AddRange(gcnew cli::array< System::Object^  >(2) { L"Multiplication", L"Addition" });
+        this->comboBox3->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"Multiplication", L"Addition", L"Subtraction" });
         this->comboBox3->Location = System::Drawing::Point(136, 131);
         this->comboBox3->Name = L"comboBox3";
         this->comboBox3->Size = System::Drawing::Size(80, 21);
@@ -398,7 +398,6 @@ private: System::Void backgroundWorker1_DoWork(System::Object^ sender, System::C
 for (int i = 0; i < rows; i++) {   //llaves de los for 
     for (int j = 0; j < rows; j++) {
         for (int k = 0; k < rows; k++) {
-            matrixR[i][j] += matrixA[i][k] * matrixB[k][j];
             if (operation == 'A') {
                 matrixR[i][j] += matrixA[i][j] + matrixB[i][j];
             } else if (operation == 'M') {
