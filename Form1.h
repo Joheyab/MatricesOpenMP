@@ -6,7 +6,8 @@
 #include "Header1.h"
 #include "Header2.h"
 #include "omp.h"
-
+#include <stdexcept>
+#include <sstream> 
 
 
 namespace CppCLRWinFormsProject {
@@ -87,7 +88,7 @@ namespace CppCLRWinFormsProject {
   private: System::Windows::Forms::TextBox^ textBox1;
   private: System::Windows::Forms::ComboBox^ comboBox1;
   private: System::ComponentModel::IContainer^ components;
-
+  private: System::Windows::Forms::Button^ button3;
 
   
       /// <summary>
@@ -272,7 +273,7 @@ namespace CppCLRWinFormsProject {
         // comboBox3
         // 
         this->comboBox3->FormattingEnabled = true;
-        this->comboBox3->Items->AddRange(gcnew cli::array< System::Object^  >(2) { L"Multiplication", L"Addition" });
+        this->comboBox3->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"Multiplication",L"Division", L"Addition" });
         this->comboBox3->Location = System::Drawing::Point(136, 131);
         this->comboBox3->Name = L"comboBox3";
         this->comboBox3->Size = System::Drawing::Size(80, 21);
@@ -360,11 +361,16 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
         matrixB[i] = new float[rows];
     for (int i = 0; i < rows; i++)
         matrixR[i] = new float[rows];
-    for (int i = 0; i < rows; i++)
+
+    Random^ rand = gcnew Random(); 
+
+    for (int i = 0; i < rows; i++) {
         for (int j = 0; j < rows; j++) {
-            matrixA[i][j] = matrixB[i][j] = i + j;
+            matrixA[i][j] = rand->Next(1, 100); 
+            matrixB[i][j] = rand->Next(1, 100); 
             matrixR[i][j] = 0;
         }
+    }
 
     Amatrix->ResetText();
     Bmatrix->ResetText();
@@ -377,13 +383,13 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
                 Bmatrix->AppendText(String::Concat(Convert::ToString(matrixB[i][j]), " "));
                 Rmatrix->AppendText(String::Concat(Convert::ToString(matrixR[i][j]), " "));
             }
-            Amatrix->AppendText("\r\n"); // Salto de línea después de cada fila
-            Bmatrix->AppendText("\r\n"); // Salto de línea después de cada fila
-            Rmatrix->AppendText("\r\n"); // Salto de línea después de cada fila
+            Amatrix->AppendText("\r\n");
+            Bmatrix->AppendText("\r\n");
+            Rmatrix->AppendText("\r\n");
         }
     }
-    
 }
+
 
 
 
@@ -393,25 +399,46 @@ private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, Sys
 
 private: System::Void Form1_Load(System::Object^ sender, System::EventArgs^ e) {
 }
-private: System::Void backgroundWorker1_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e) {
-    double stime = omp_get_wtime();
-#pragma omp parallel num_threads(nThreads)
-        for (int i = 0; i < rows; i++)
-            for (int j = 0; j < rows; j++)
-                for (int k = 0; k < rows; k++) {
-                    if (operation == 'A') {
-                        matrixR[i][j] += matrixA[i][j] + matrixB[i][j];
-                    }
-                    else if (operation == 'M') {
-                        matrixR[i][j] += matrixA[i][k] * matrixB[k][j];
-                    }
-                }
-    stime = omp_get_wtime() - stime;
-    message = String::Concat("Elapsed time: ", Convert::ToString(stime), " seconds");
-        SetText(message);
 
-}
-  private: System::Void comboBox2_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+       private: System::Void backgroundWorker1_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e) {
+           double stime = omp_get_wtime();
+#pragma omp parallel num_threads(nThreads)
+           for (int i = 0; i < rows; i++)
+               for (int j = 0; j < rows; j++)
+                   for (int k = 0; k < rows; k++) {
+                       if (operation == 'A') {
+                           matrixR[i][j] += matrixA[i][j] + matrixB[i][j];
+                       }
+                       else if (operation == 'M') {
+                           matrixR[i][j] += matrixA[i][k] * matrixB[k][j];
+                       }
+                       else if (operation == 'D') {
+                         /*  DivideMatrices(matrixA, matrixB, matrixR, rows);*/
+                               matrixR[i][j] += matrixA[i][k]/ matrixB[k][j];
+                       }
+                   }
+           stime = omp_get_wtime() - stime;
+           message = String::Concat("Elapsed time: ", Convert::ToString(stime), " seconds");
+           SetText(message);
+       }
+              void DivideMatrices(float** matrixA, float** matrixB, float** matrixR, int rows) {
+                  float** inverseB = new float* [rows];
+                  for (int i = 0; i < rows; i++) {
+                      inverseB[i] = new float[rows];  // Inicializa cada fila de inverseB
+                      for (int j = 0; j < rows; j++) {
+                          matrixR[i][j] = 0;
+                          if (matrixB[i][j] == 0) {
+                              throw std::invalid_argument("Division by zero error.");
+                          }
+                          inverseB[i][j] = 1.0f / matrixB[i][j];
+                          for (int k = 0; k < rows; k++) {
+                              matrixR[i][j] += matrixA[i][k] * inverseB[k][j];
+                          }
+                      }
+                  }
+              }
+   
+       private: System::Void comboBox2_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
     	rows = int::Parse(comboBox2->Text);
   }
   private: System::Void Amatrix_TextChanged(System::Object^ sender, System::EventArgs^ e) {
@@ -434,9 +461,17 @@ private: System::Void label6_Click(System::Object^ sender, System::EventArgs^ e)
           else if (selectedOperation == "Addition") {
               operation = 'A';
           }
+          else if (selectedOperation == "Division") {
+              operation = 'D';
+          }
       }
 }
 };
+
+
 }
+
+
+
 
 
