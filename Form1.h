@@ -377,9 +377,9 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
                 Bmatrix->AppendText(String::Concat(Convert::ToString(matrixB[i][j]), " "));
                 Rmatrix->AppendText(String::Concat(Convert::ToString(matrixR[i][j]), " "));
             }
-            Amatrix->AppendText("\r\n"); // Salto de línea después de cada fila
-            Bmatrix->AppendText("\r\n"); // Salto de línea después de cada fila
-            Rmatrix->AppendText("\r\n"); // Salto de línea después de cada fila
+            Amatrix->AppendText("\r\n"); // Salto de lï¿½nea despuï¿½s de cada fila
+            Bmatrix->AppendText("\r\n"); // Salto de lï¿½nea despuï¿½s de cada fila
+            Rmatrix->AppendText("\r\n"); // Salto de lï¿½nea despuï¿½s de cada fila
         }
     }
     
@@ -395,17 +395,20 @@ private: System::Void Form1_Load(System::Object^ sender, System::EventArgs^ e) {
 }
 private: System::Void backgroundWorker1_DoWork(System::Object^ sender, System::ComponentModel::DoWorkEventArgs^ e) {
     double stime = omp_get_wtime();
-#pragma omp parallel num_threads(nThreads)
-        for (int i = 0; i < rows; i++)
-            for (int j = 0; j < rows; j++)
-                for (int k = 0; k < rows; k++) {
-                    if (operation == 'A') {
-                        matrixR[i][j] += matrixA[i][j] + matrixB[i][j];
-                    }
-                    else if (operation == 'M') {
-                        matrixR[i][j] += matrixA[i][k] * matrixB[k][j];
-                    }
-                }
+for (int i = 0; i < rows; i++) {   //llaves de los for 
+    for (int j = 0; j < rows; j++) {
+        for (int k = 0; k < rows; k++) {
+            matrixR[i][j] += matrixA[i][k] * matrixB[k][j];
+            if (operation == 'A') {
+                matrixR[i][j] += matrixA[i][j] + matrixB[i][j];
+            } else if (operation == 'M') {
+                matrixR[i][j] += matrixA[i][k] * matrixB[k][j];
+            } else if (operation == 'R') {
+                matrixR[i][j] += matrixA[i][k] - matrixB[k][j];   //operacion Resta
+            }
+        }
+    }
+}
     stime = omp_get_wtime() - stime;
     message = String::Concat("Elapsed time: ", Convert::ToString(stime), " seconds");
         SetText(message);
@@ -424,17 +427,20 @@ private: System::Void label5_Click(System::Object^ sender, System::EventArgs^ e)
 }
 private: System::Void label6_Click(System::Object^ sender, System::EventArgs^ e) {
 }
-  private: System::Void comboBox3_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
-      ComboBox^ comboBox = dynamic_cast<ComboBox^>(sender);
-      if (comboBox != nullptr) {
-          String^ selectedOperation = comboBox->SelectedItem->ToString();
-          if (selectedOperation == "Multiplication") {
-              operation = 'M';
-          }
-          else if (selectedOperation == "Addition") {
-              operation = 'A';
-          }
-      }
+private: System::Void comboBox3_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+    ComboBox^ comboBox = dynamic_cast<ComboBox^>(sender);
+    if (comboBox != nullptr) {
+        String^ selectedOperation = comboBox->SelectedItem->ToString();
+        if (selectedOperation == "Multiplication") {
+            operation = 'M';
+        }
+        else if (selectedOperation == "Addition") {
+            operation = 'A';
+        }
+        else if (selectedOperation == "Subtraction") { // la opciÃ³n de resta
+            operation = 'R';
+        }
+    }
 }
 };
 }
