@@ -407,10 +407,10 @@ private: System::Void Form1_Load(System::Object^ sender, System::EventArgs^ e) {
                for (int j = 0; j < rows; j++)
                    for (int k = 0; k < rows; k++) {
                        if (operation == 'A') {
-                           matrixR[i][j] = matrixA[i][j] + matrixB[i][j];
+                           matrixR[i][j] += matrixA[i][j] + matrixB[i][j];
                        }
                        else if (operation == 'M') {
-                           matrixR[i][j] = matrixA[i][k] * matrixB[k][j];
+                           matrixR[i][j] += matrixA[i][k] * matrixB[k][j];
                        }
                        else if (operation == 'D') {
                            DivideMatrices(matrixA, matrixB, matrixR, rows);
