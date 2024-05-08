@@ -1,0 +1,5 @@
+﻿  CppCLR_WinFormsProject.cpp
+D:\Progra IV\MatricesOpenMP\Form1.h(369,39): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+D:\Progra IV\MatricesOpenMP\Form1.h(370,39): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+  AssemblyInfo.obj : se encontró un módulo MSIL; vinculación incremental deshabilitada para MSIL; ejecutando vínculo completo
+  MatricesOPENMP.vcxproj -> D:\Progra IV\MatricesOpenMP\x64\Debug\MatricesOPENMP.exe
