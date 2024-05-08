@@ -407,14 +407,13 @@ private: System::Void Form1_Load(System::Object^ sender, System::EventArgs^ e) {
                for (int j = 0; j < rows; j++)
                    for (int k = 0; k < rows; k++) {
                        if (operation == 'A') {
-                           matrixR[i][j] += matrixA[i][j] + matrixB[i][j];
+                           matrixR[i][j] = matrixA[i][j] + matrixB[i][j];
                        }
                        else if (operation == 'M') {
-                           matrixR[i][j] += matrixA[i][k] * matrixB[k][j];
+                           matrixR[i][j] = matrixA[i][k] * matrixB[k][j];
                        }
                        else if (operation == 'D') {
-                         /*  DivideMatrices(matrixA, matrixB, matrixR, rows);*/
-                               matrixR[i][j] += matrixA[i][k]/ matrixB[k][j];
+                           DivideMatrices(matrixA, matrixB, matrixR, rows);
                        }
                    }
            stime = omp_get_wtime() - stime;
@@ -428,15 +427,21 @@ private: System::Void Form1_Load(System::Object^ sender, System::EventArgs^ e) {
                       for (int j = 0; j < rows; j++) {
                           matrixR[i][j] = 0;
                           if (matrixB[i][j] == 0) {
-                              throw std::invalid_argument("Division by zero error.");
+                              throw gcnew System::Exception("Division by zero error.");
                           }
                           inverseB[i][j] = 1.0f / matrixB[i][j];
+                      }
+                  }
+
+                  for (int i = 0; i < rows; i++) {
+                      for (int j = 0; j < rows; j++) {
                           for (int k = 0; k < rows; k++) {
                               matrixR[i][j] += matrixA[i][k] * inverseB[k][j];
                           }
                       }
                   }
               }
+
    
        private: System::Void comboBox2_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
     	rows = int::Parse(comboBox2->Text);
