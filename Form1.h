@@ -273,7 +273,9 @@ namespace CppCLRWinFormsProject {
         // comboBox3
         // 
         this->comboBox3->FormattingEnabled = true;
-        this->comboBox3->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"Multiplication",L"Division", L"Addition" });
+
+        this->comboBox3->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"Multiplication",L"Division", L"Addition", L"Subtraction" });
+
         this->comboBox3->Location = System::Drawing::Point(136, 131);
         this->comboBox3->Name = L"comboBox3";
         this->comboBox3->Size = System::Drawing::Size(80, 21);
@@ -386,6 +388,7 @@ private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e
             Amatrix->AppendText("\r\n");
             Bmatrix->AppendText("\r\n");
             Rmatrix->AppendText("\r\n");
+
         }
     }
 }
@@ -411,6 +414,9 @@ private: System::Void Form1_Load(System::Object^ sender, System::EventArgs^ e) {
                        }
                        else if (operation == 'M') {
                            matrixR[i][j] += matrixA[i][k] * matrixB[k][j];
+                       }
+                       else if (operation == 'R') {
+                           matrixR[i][j] += matrixA[i][k] - matrixB[k][j];   //operacion Resta
                        }
                        else if (operation == 'D') {
                            DivideMatrices(matrixA, matrixB, matrixR, rows);
@@ -469,7 +475,11 @@ private: System::Void label6_Click(System::Object^ sender, System::EventArgs^ e)
           else if (selectedOperation == "Division") {
               operation = 'D';
           }
+           else if (selectedOperation == "Subtraction") { // la opción de resta
+            operation = 'R';
+        }
       }
+
 }
 };
 
